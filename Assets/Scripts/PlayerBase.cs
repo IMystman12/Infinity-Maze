@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 
-public class PlayerBase : MonoBehaviourPun, IPunObservable
+public class PlayerBase : MonoBehaviourPun
 {
     public MazeGenerator maze;
     int c;
@@ -29,18 +29,16 @@ public class PlayerBase : MonoBehaviourPun, IPunObservable
             {
                 cc.enabled = false;
                 flag = false;
-                c = Mathf.RoundToInt(transform.position.x);
+                c = Mathf.RoundToInt(transform.position.x)-    maze.xCurrent ;
                 if (c != 0)
                 {
                     maze.xCurrent += (int)Mathf.Sign(c);
-                    transform.position -= Vector3.right * (int)Mathf.Sign(c);
                     flag = true;
                 }
-                c = Mathf.RoundToInt(transform.position.z);
+                c = Mathf.RoundToInt(transform.position.z)-    maze.yCurrent ;
                 if (c != 0)
                 {
                     maze.yCurrent += (int)Mathf.Sign(c);
-                    transform.position -= Vector3.forward * (int)Mathf.Sign(c);
                     flag = true;
                 }
                 if (flag)
@@ -49,26 +47,6 @@ public class PlayerBase : MonoBehaviourPun, IPunObservable
                 }
                 cc.enabled = true;
             }
-        }
-    }
-
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        if (photonView.IsMine)
-        {
-            stream.SendNext(maze.xCurrent);
-            stream.SendNext(transform.position.x);
-
-            stream.SendNext(maze.yCurrent);
-            stream.SendNext(transform.position.z);
-        }
-        else
-        {
-            int a = (int)stream.ReceiveNext();
-            float b = (float)stream.ReceiveNext();
-            int c = (int)stream.ReceiveNext();
-            float d = (float)stream.ReceiveNext();
-            transform.position = new Vector3(a + b, 0.5f, c + d);
         }
     }
 }

@@ -13,6 +13,7 @@ public class MazeGenerator : MonoBehaviour
     void Start() => Generate();
     public void Generate()
     {
+        transform.position = new Vector3(xCurrent, 0, yCurrent);
         if (wallParents)
         {
             Destroy(wallParents.gameObject);
@@ -25,7 +26,7 @@ public class MazeGenerator : MonoBehaviour
             {
                 if (Mathf.PerlinNoise((x + xCurrent) * 0.1f, (y + yCurrent) * 0.1f) > wallChance)
                 {
-                    Instantiate(wallPref, new Vector3(x, 0.5f, y), UnityEngine.Quaternion.identity, wallParents);
+                    Instantiate(wallPref, new Vector3(x, 0.5f, y) + transform.position, UnityEngine.Quaternion.identity, wallParents);
                 }
             }
         }
